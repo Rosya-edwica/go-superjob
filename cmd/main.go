@@ -10,20 +10,16 @@ import (
 )
 
 var cities []models.City
-var vacancies []models.Vacancy
+var db *database.DB
 
 func main() {
-	db := database.InitDatabase()
+	db = database.InitDatabase()
 	defer db.Close()
 
 	cities = db.GetCities()
 	positions := db.GetPositions()
 	for _, position := range positions {
 		findPositionVacancies(position)
-		if len(vacancies) != 0 {
-			db.SaveManyVacancies(vacancies)
-			vacancies = []models.Vacancy{}
-		}
 		db.UpdatePositionStatusToParsed(position.Id)
 	}
 
@@ -64,7 +60,8 @@ func scrapePositionInRussia(name string, id int) {
 	} else {
 		if vacanciesCount != 0 {
 			logger.Log.Printf("Ищем вакансии '%s' по всей России. Количество вакансий: %d", name, vacanciesCount)
-			vacancies = append(vacancies, superjob.CollectAllVacancies(russiaUrl)...)
+			vacancies := superjob.CollectAllVacancies(russiaUrl)
+			db.SaveManyVacancies(vacancies)
 		} else {
 			logger.Log.Printf("Ни найдено ни одной вакансии для: %s", name)
 		}
@@ -89,6 +86,8 @@ func scrapePositionInCity(name string, id int, city models.City, wg *sync.WaitGr
 	baseUrl := superjob.CreateQuery()
 	thisCityVacancies := superjob.CollectAllVacancies(baseUrl)
 	logger.Log.Printf("В городе %s нашлось %d вакансий по запросу:%s", city.Name, len(thisCityVacancies), name)
-	vacancies = append(vacancies, thisCityVacancies...)
+	if len(thisCityVacancies) != 0 {
+		db.SaveManyVacancies(thisCityVacancies)
+	}
 	wg.Done()
 }
