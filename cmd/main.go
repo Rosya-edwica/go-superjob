@@ -28,12 +28,23 @@ func main() {
 func findPositionVacancies(position models.Position) {
 	names := position.OtherNames
 	names = append(names, position.Name)
-	for _, positionName := range names {
+	for _, positionName := range uniqueNames(names) {
 		if len(positionName) < 2 {
 			continue
 		}
 		logger.Log.Printf("Ищем профессию: %s ", positionName)
 		scrapePositionInRussia(positionName, position.Id)
+	}
+	return
+}
+
+func uniqueNames(names []string) (unique []string) {
+	allKeys := make(map[string]bool)
+	for _, item := range names {
+		if _, value := allKeys[item]; !value {
+			allKeys[item] = true
+			unique = append(unique, item)
+		}
 	}
 	return
 }
