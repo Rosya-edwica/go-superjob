@@ -22,7 +22,7 @@ type API struct {
 }
 
 const (
-	TOKEN         = "v3.r.137188118.ebec62fe8c4188dd1d6380439b459bd7c832949c.bc8c79cc9823d9385a9daf8e0ed2291299fd921b"
+	TOKEN         = "v3.r.137188118.28a168bdc625692a956f581779284ebaed8f3141.06a12dccbe382b9dafaa8ea8cfbf11b87d65171e"
 	CLIENT_SECRET = "v3.r.137188118.b1fc20f24580069b6f50e875ec950fda43eef2b5.ba7e377b764e0f2a8b6daff6e8078ba0cea471e6"
 	CLIENT_ID     = "2093"
 	MAIN_API_URL  = "https://api.superjob.ru/2.0/vacancies"

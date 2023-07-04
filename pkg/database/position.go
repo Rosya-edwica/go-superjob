@@ -9,7 +9,7 @@ import (
 )
 
 func (d *DB) GetPositions() (positions []models.Position) {
-	query := `SELECT id, name, other_names FROM position WHERE parsed = false AND id != 0`
+	query := `SELECT position_id, name, other_names FROM position WHERE parsed = false AND id != 0`
 	db := d.GetDB()
 	rows, err := db.Query(query)
 	checkErr(err)
