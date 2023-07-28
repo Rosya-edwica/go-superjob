@@ -5,7 +5,7 @@ import (
 )
 
 func (d *DB) GetCities() (cities []models.City) {
-	query := `SELECT id_edwica, name, id_superjob FROM city WHERE id_superjob != 0 ORDER BY id_superjob ASC`
+	query := `SELECT id_edwica, name, id_superjob FROM h_city WHERE id_superjob != 0 ORDER BY id_superjob ASC`
 	db := d.GetDB()
 	rows, err := db.Query(query)
 	checkErr(err)

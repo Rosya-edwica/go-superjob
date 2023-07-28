@@ -17,10 +17,9 @@ func main() {
 	defer db.Close()
 
 	cities = db.GetCities()
-	positions := db.GetPositions()
+	positions := db.GetProfessionsFromFile(true)
 	for _, position := range positions {
 		findPositionVacancies(position)
-		db.UpdatePositionStatusToParsed(position.Id)
 	}
 
 }

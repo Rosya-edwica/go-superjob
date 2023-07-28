@@ -4,19 +4,18 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	"strconv"
 	"superjob/pkg/logger"
 	"superjob/pkg/telegram"
 
 	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type DB struct {
 	db   *sql.DB
 	Name string
 	Host string
-	Port int
+	Port string
 	User string
 	Pass string
 }
@@ -24,17 +23,15 @@ type DB struct {
 func InitDatabase() *DB {
 	err := godotenv.Load()
 	checkErr(err)
-	port, err := strconv.Atoi(os.Getenv("POSTGRES_PORT"))
 	checkErr(err)
 	db := &DB{
-		Host: os.Getenv("POSTGRES_HOST"),
-		User: os.Getenv("POSTGRES_USER"),
-		Name: os.Getenv("POSTGRES_DATABASE"),
-		Pass: os.Getenv("POSTGRES_PASSWORD"),
-		Port: port,
+		Host: os.Getenv("MYSQL_HOST"),
+		User: os.Getenv("MYSQL_USER"),
+		Name: os.Getenv("MYSQL_DATABASE"),
+		Pass: os.Getenv("MYSQL_PASSWORD"),
+		Port: os.Getenv("MYSQL_PORT"),
 	}
-	psqlUrl := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", db.Host, db.Port, db.User, db.Pass, db.Name)
-	connection, err := sql.Open("postgres", psqlUrl)
+	connection, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", db.User, db.Pass, db.Host, db.Port, db.Name))
 	checkErr(err)
 
 	db.db = connection
